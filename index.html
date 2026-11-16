@@ -1,161 +1,1008 @@
-
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lớp 9/2 | Class Hub</title>
+  <meta name="theme-color" content="#0b1224">
+  <title>NEXUS 9/2 | Class Portal</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --bg: #f4f6fb;
+      --sidebar: #0b1224;
+      --sidebar-light: #151f38;
+      --primary: #4776ff;
+      --primary-light: #edf2ff;
+      --text: #182238;
+      --muted: #8993a7;
+      --border: #e9edf5;
+      --white: #fff;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background: #f3f5fa;
-      color: #20283a;
-      display: grid;
-      place-items: center;
-      padding: 20px;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
     }
 
-    .container {
-      width: 100%;
-      max-width: 420px;
-      background: white;
-      padding: 32px;
-      border-radius: 18px;
-      box-shadow: 0 8px 35px #17255412;
+    button, input {
+      font: inherit;
     }
-
-    .logo {
-      width: 58px;
-      height: 58px;
-      border-radius: 16px;
-      background: #243b70;
-      color: white;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    h1 { font-size: 25px; margin: 0 0 8px; }
-    .subtitle { color: #788196; margin-bottom: 28px; }
-
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: bold;
-      margin: 17px 0 8px;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #dce1eb;
-      border-radius: 9px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    input:focus { border-color: #3456a0; }
 
     button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 9px;
-      background: #243b70;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 22px;
       cursor: pointer;
     }
 
-    button:disabled { opacity: .6; cursor: wait; }
+    /* LOGIN */
 
-    .message {
-      margin-top: 16px;
+    #loginSection {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 20% 20%, #263e72 0, transparent 35%),
+        radial-gradient(circle at 80% 80%, #172c59 0, transparent 35%),
+        #0b1224;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      padding: 38px;
+      border-radius: 22px;
+      box-shadow: 0 25px 80px #0005;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #4776ff, #2450c7);
+      color: white;
+      font-weight: 900;
+      font-size: 20px;
+      box-shadow: 0 8px 25px #4776ff55;
+    }
+
+    .login-card h1 {
+      margin: 25px 0 7px;
+      font-size: 28px;
+    }
+
+    .login-card .subtitle {
+      color: var(--muted);
+      margin: 0 0 28px;
       font-size: 14px;
-      color: #b42318;
+    }
+
+    .login-card label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin: 18px 0 8px;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #dfe4ee;
+      border-radius: 10px;
+      outline: none;
+      transition: .2s;
+    }
+
+    .login-card input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px #4776ff18;
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      margin-top: 24px;
+      transition: .2s;
+    }
+
+    .primary-btn:hover {
+      background: #315fe7;
+      transform: translateY(-1px);
+    }
+
+    .primary-btn:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .login-message {
+      color: #c0392b;
+      font-size: 13px;
+      margin-top: 14px;
       line-height: 1.5;
     }
 
-    .dashboard { display: none; }
-    .role {
-      display: inline-block;
-      background: #edf2ff;
-      color: #29477e;
-      padding: 7px 12px;
-      border-radius: 20px;
+    /* APPLICATION */
+
+    #app {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 255px;
+      background: var(--sidebar);
+      color: white;
+      padding: 25px 17px;
+      display: flex;
+      flex-direction: column;
+      z-index: 20;
+      transition: transform .25s ease;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 9px 32px;
+    }
+
+    .sidebar-brand .brand-logo {
+      width: 43px;
+      height: 43px;
+      font-size: 15px;
+      border-radius: 13px;
+    }
+
+    .brand-name {
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: .5px;
+    }
+
+    .brand-caption {
+      color: #8491ad;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .nav-label {
+      color: #65728e;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 0 12px;
+      margin: 10px 0 12px;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav-item {
+      border: 0;
+      background: transparent;
+      color: #aab5ca;
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      text-align: left;
       font-size: 13px;
-      margin: 12px 0;
+      transition: .2s;
     }
 
-    .info {
-      background: #f6f7fb;
+    .nav-item:hover {
+      background: var(--sidebar-light);
+      color: white;
+    }
+
+    .nav-item.active {
+      color: white;
+      background: linear-gradient(90deg, #315fe7, #4776ff);
+      box-shadow: 0 6px 20px #315fe744;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      border-top: 1px solid #ffffff15;
+      padding-top: 17px;
+    }
+
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
       border-radius: 12px;
-      padding: 16px;
-      margin-top: 18px;
-      line-height: 1.8;
+      display: grid;
+      place-items: center;
+      background: #263c70;
+      color: #dce7ff;
+      font-weight: 800;
+      flex-shrink: 0;
     }
 
-    .logout { background: #596579; }
+    .user-name {
+      font-size: 12px;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: #8290ab;
+      margin-top: 4px;
+    }
+
+    .main {
+      margin-left: 255px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 76px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 35px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-title {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .status {
+      font-size: 11px;
+      color: #16845b;
+      background: #e8f8f1;
+      border-radius: 20px;
+      padding: 7px 11px;
+      font-weight: 700;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 0;
+      background: transparent;
+      font-size: 23px;
+      color: var(--text);
+    }
+
+    .content {
+      max-width: 1450px;
+      margin: auto;
+      padding: 35px;
+    }
+
+    .page {
+      display: none;
+      animation: appear .25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .page-heading h1 {
+      font-size: 26px;
+      margin: 0 0 8px;
+      letter-spacing: -.5px;
+    }
+
+    .page-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .eyebrow {
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+      margin-bottom: 10px;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(115deg, #182b55, #315fe7);
+      border-radius: 19px;
+      padding: 30px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .welcome-banner::after {
+      content: "9/2";
+      position: absolute;
+      right: 35px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 100px;
+      font-weight: 900;
+      color: #ffffff12;
+      pointer-events: none;
+    }
+
+    .welcome-banner h2 {
+      font-size: 23px;
+      margin: 0 0 9px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-banner p {
+      color: #d3ddf8;
+      font-size: 13px;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card, .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 21px;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: var(--primary-light);
+      font-size: 17px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-value {
+      font-size: 25px;
+      font-weight: 800;
+      margin-top: 7px;
+    }
+
+    .stat-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 18px;
+    }
+
+    .panel h3 {
+      font-size: 15px;
+      margin: 0 0 7px;
+    }
+
+    .panel-description {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0 0 20px;
+    }
+
+    .empty-state {
+      border: 1px dashed #dce2ee;
+      background: #fafbfe;
+      border-radius: 12px;
+      padding: 30px 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .empty-icon {
+      font-size: 27px;
+      margin-bottom: 10px;
+    }
+
+    .account-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .account-row:last-child {
+      border-bottom: 0;
+    }
+
+    .account-row span:first-child {
+      color: var(--muted);
+    }
+
+    .account-row span:last-child {
+      font-weight: 700;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .notice {
+      margin-top: 18px;
+      background: #fff8e8;
+      border: 1px solid #f5e6bd;
+      color: #87611a;
+      padding: 13px 15px;
+      border-radius: 11px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .logout-btn {
+      border: 0;
+      background: #ffffff12;
+      color: #ffb8b8;
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-top: 12px;
+      font-size: 12px;
+    }
+
+    .logout-btn:hover {
+      background: #ffffff20;
+    }
+
+    .page-placeholder {
+      max-width: 700px;
+    }
+
+    .mobile-overlay {
+      display: none;
+    }
+
+    @media (max-width: 1050px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .mobile-overlay.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: #0007;
+        z-index: 15;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        height: 65px;
+        padding: 0 17px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .content {
+        padding: 23px 16px;
+      }
+
+      .page-heading h1 {
+        font-size: 22px;
+      }
+
+      .welcome-banner {
+        padding: 24px 20px;
+      }
+
+      .welcome-banner::after {
+        right: 10px;
+        font-size: 65px;
+      }
+
+      .overview-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 15px;
+      }
+
+      .stat-value {
+        font-size: 21px;
+      }
+
+      .status {
+        display: none;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .login-card {
+        padding: 27px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <main class="container">
 
-    <section id="loginSection">
-      <div class="logo">9/2</div>
-      <h1>Class Hub</h1>
-      <p class="subtitle">Cổng thông tin lớp 9/2</p>
+  <!-- LOGIN -->
+  <section id="loginSection">
+    <div class="login-card">
+      <div class="brand-logo">N9</div>
+
+      <h1>NEXUS 9/2</h1>
+      <p class="subtitle">Cổng thông tin lớp học</p>
 
       <form id="loginForm">
         <label for="username">Tên đăng nhập</label>
-        <input id="username" placeholder="Ví dụ: 9201"
-          autocomplete="username" required>
+        <input
+          id="username"
+          placeholder="Ví dụ: 9201"
+          autocomplete="username"
+          required
+        >
 
         <label for="password">Mật khẩu</label>
-        <input id="password" type="password"
+        <input
+          id="password"
+          type="password"
           placeholder="Nhập mật khẩu"
-          autocomplete="current-password" required>
+          autocomplete="current-password"
+          required
+        >
 
-        <button id="loginButton" type="submit">Đăng nhập</button>
+        <button class="primary-btn" id="loginButton" type="submit">
+          Đăng nhập
+        </button>
       </form>
 
-      <div id="message" class="message" role="alert"></div>
-    </section>
+      <div id="message" class="login-message" role="alert"></div>
+    </div>
+  </section>
 
-    <section id="dashboard" class="dashboard">
-      <div class="logo">9/2</div>
-      <h1>Xin chào!</h1>
-      <p id="fullName"></p>
-      <span id="role" class="role"></span>
 
-      <div class="info">
-        <div><b>Username:</b> <span id="displayUsername"></span></div>
-        <div><b>Vai trò:</b> <span id="displayRole"></span></div>
-        <p id="passwordNotice"></p>
+  <!-- APPLICATION -->
+  <div id="app">
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="sidebar-brand">
+        <div class="brand-logo">N9</div>
+        <div>
+          <div class="brand-name">NEXUS 9/2</div>
+          <div class="brand-caption">CLASS MANAGEMENT PORTAL</div>
+        </div>
       </div>
 
-      <button class="logout" id="logoutButton">Đăng xuất</button>
-    </section>
+      <div class="nav-label">WORKSPACE</div>
 
-  </main>
+      <nav class="nav-list">
+        <button class="nav-item active" data-page="overview">
+          <span class="nav-icon">▦</span>
+          Overview
+        </button>
+
+        <button class="nav-item" data-page="schedule">
+          <span class="nav-icon">▤</span>
+          Schedule
+        </button>
+
+        <button class="nav-item" data-page="leaderboard">
+          <span class="nav-icon">♛</span>
+          Leaderboard
+        </button>
+
+        <button class="nav-item" data-page="members">
+          <span class="nav-icon">♙</span>
+          Members
+        </button>
+
+        <div class="nav-label" style="margin-top:25px">MANAGEMENT</div>
+
+        <button class="nav-item" data-page="reports">
+          <span class="nav-icon">▧</span>
+          Reports
+        </button>
+
+        <button class="nav-item" data-page="settings">
+          <span class="nav-icon">⚙</span>
+          Settings
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="avatar" id="sidebarAvatar">N</div>
+          <div style="min-width:0">
+            <div class="user-name" id="sidebarName">User</div>
+            <div class="user-role" id="sidebarRole">Student</div>
+          </div>
+        </div>
+
+        <button class="logout-btn" id="logoutButton">
+          ↪ &nbsp; Đăng xuất
+        </button>
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+            ☰
+          </button>
+          <div class="topbar-title" id="topbarTitle">Overview</div>
+        </div>
+
+        <div class="topbar-right">
+          <span class="status">● SYSTEM ONLINE</span>
+          <div class="avatar" id="topAvatar">N</div>
+        </div>
+      </header>
+
+
+      <div class="content">
+
+        <!-- OVERVIEW -->
+        <section class="page active" id="page-overview">
+
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">YOUR WORKSPACE</div>
+              <h1>Overview</h1>
+              <p>Tổng quan không gian học tập của lớp 9/2</p>
+            </div>
+          </div>
+
+          <div class="welcome-banner">
+            <h2>Xin chào, <span id="welcomeName">User</span>!</h2>
+            <p>Chào mừng mày đến với NEXUS 9/2.</p>
+          </div>
+
+          <div class="stats-grid">
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Thành viên</span>
+                <span class="stat-icon">♙</span>
+              </div>
+              <div class="stat-value">—</div>
+              <div class="stat-note">Chưa kết nối dữ liệu</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Điểm cá nhân</span>
+                <span class="stat-icon">✦</span>
+              </div>
+              <div class="stat-value">—</div>
+              <div class="stat-note">Chưa có dữ liệu điểm</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Lịch trực</span>
+                <span class="stat-icon">▤</span>
+              </div>
+              <div class="stat-value">—</div>
+              <div class="stat-note">Chưa có lịch được thiết lập</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Thông báo</span>
+                <span class="stat-icon">♧</span>
+              </div>
+              <div class="stat-value">—</div>
+              <div class="stat-note">Chưa kết nối dữ liệu</div>
+            </div>
+
+          </div>
+
+          <div class="overview-grid">
+
+            <div class="panel">
+              <h3>Recent activity</h3>
+              <p class="panel-description">
+                Hoạt động gần đây của lớp
+              </p>
+
+              <div class="empty-state">
+                <div class="empty-icon">◷</div>
+                Chưa có hoạt động nào được hiển thị.<br>
+                Dữ liệu sẽ xuất hiện sau khi tích hợp hệ thống.
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>Account information</h3>
+              <p class="panel-description">
+                Thông tin tài khoản hiện tại
+              </p>
+
+              <div class="account-row">
+                <span>Họ và tên</span>
+                <span id="accountName">—</span>
+              </div>
+
+              <div class="account-row">
+                <span>Username</span>
+                <span id="accountUsername">—</span>
+              </div>
+
+              <div class="account-row">
+                <span>Vai trò</span>
+                <span id="accountRole">—</span>
+              </div>
+
+              <div class="account-row">
+                <span>Trạng thái</span>
+                <span style="color:#16845b">Đã đăng nhập</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notice" id="passwordNotice" style="display:none"></div>
+
+        </section>
+
+
+        <!-- SCHEDULE -->
+        <section class="page" id="page-schedule">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">CLASS ORGANIZATION</div>
+              <h1>Schedule</h1>
+              <p>Thời khóa biểu và lịch trực nhật</p>
+            </div>
+          </div>
+
+          <div class="panel page-placeholder">
+            <h3>Class schedule</h3>
+            <p class="panel-description">Lịch học và lịch phân công</p>
+            <div class="empty-state">
+              <div class="empty-icon">▤</div>
+              Chưa có dữ liệu lịch học hoặc lịch trực.<br>
+              Trang này chưa được kết nối với cơ sở dữ liệu.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- LEADERBOARD -->
+        <section class="page" id="page-leaderboard">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">PERFORMANCE</div>
+              <h1>Leaderboard</h1>
+              <p>Bảng xếp hạng điểm thi đua</p>
+            </div>
+          </div>
+
+          <div class="panel page-placeholder">
+            <h3>Ranking</h3>
+            <p class="panel-description">Thứ hạng thành viên và tổ</p>
+            <div class="empty-state">
+              <div class="empty-icon">♛</div>
+              Chưa có dữ liệu điểm thi đua.<br>
+              Bảng xếp hạng sẽ cần được kết nối với hệ thống điểm.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- MEMBERS -->
+        <section class="page" id="page-members">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">COMMUNITY</div>
+              <h1>Members</h1>
+              <p>Danh sách thành viên lớp 9/2</p>
+            </div>
+          </div>
+
+          <div class="panel page-placeholder">
+            <h3>Class members</h3>
+            <p class="panel-description">Thông tin thành viên</p>
+            <div class="empty-state">
+              <div class="empty-icon">♙</div>
+              Danh sách thành viên chưa được tải.<br>
+              Chưa có dữ liệu học sinh được hiển thị tại đây.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- REPORTS -->
+        <section class="page" id="page-reports">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">ANALYTICS</div>
+              <h1>Reports</h1>
+              <p>Báo cáo và thống kê của lớp</p>
+            </div>
+          </div>
+
+          <div class="panel page-placeholder">
+            <h3>Class reports</h3>
+            <p class="panel-description">Báo cáo hoạt động</p>
+            <div class="empty-state">
+              <div class="empty-icon">▧</div>
+              Chưa có báo cáo nào được tạo.<br>
+              Chức năng này chưa kết nối dữ liệu.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- SETTINGS -->
+        <section class="page" id="page-settings">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">PREFERENCES</div>
+              <h1>Settings</h1>
+              <p>Thông tin và cài đặt tài khoản</p>
+            </div>
+          </div>
+
+          <div class="panel page-placeholder">
+            <h3>My account</h3>
+            <p class="panel-description">Thông tin tài khoản hiện tại</p>
+
+            <div class="account-row">
+              <span>Họ và tên</span>
+              <span id="settingsName">—</span>
+            </div>
+
+            <div class="account-row">
+              <span>Username</span>
+              <span id="settingsUsername">—</span>
+            </div>
+
+            <div class="account-row">
+              <span>Vai trò</span>
+              <span id="settingsRole">—</span>
+            </div>
+
+            <div class="notice">
+              Chức năng đổi mật khẩu và chỉnh sửa hồ sơ chưa được triển khai.
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
 
   <script>
     // SUPABASE CONFIGURATION
     const SUPABASE_URL = "https://bvoponruhjawmczrypco.supabase.co";
 
-  const SUPABASE_KEY ="sb_publishable_FmPhxJD9bd8bjvVZLya04g_De41IGYc";
+    const SUPABASE_KEY = "sb_publishable_FmPhxJD9bd8bjvVZLya04g_De41IGYc";
 
     const db = window.supabase.createClient(
       SUPABASE_URL,
@@ -163,7 +1010,7 @@
     );
 
     const loginSection = document.getElementById("loginSection");
-    const dashboard = document.getElementById("dashboard");
+    const app = document.getElementById("app");
     const message = document.getElementById("message");
     const loginButton = document.getElementById("loginButton");
 
@@ -176,13 +1023,27 @@
       group_leader: "Tổ trưởng"
     };
 
+    const pageTitles = {
+      overview: "Overview",
+      schedule: "Schedule",
+      leaderboard: "Leaderboard",
+      members: "Members",
+      reports: "Reports",
+      settings: "Settings"
+    };
+
     function showMessage(text) {
       message.textContent = text;
     }
 
     function showLogin() {
-      loginSection.style.display = "block";
-      dashboard.style.display = "none";
+      app.style.display = "none";
+      loginSection.style.display = "grid";
+    }
+
+    function showApp() {
+      loginSection.style.display = "none";
+      app.style.display = "block";
     }
 
     async function showDashboard(user) {
@@ -198,27 +1059,41 @@
         );
       }
 
-      document.getElementById("fullName").textContent =
-        profile.full_name;
+      const name = profile.full_name || "Người dùng";
+      const username = profile.username || "";
+      const role = roleNames[profile.role] || profile.role || "Chưa xác định";
+      const initial = name.trim().charAt(0).toUpperCase() || "N";
 
-      document.getElementById("displayUsername").textContent =
-        profile.username;
+      document.getElementById("welcomeName").textContent = name;
+      document.getElementById("sidebarName").textContent = name;
+      document.getElementById("sidebarRole").textContent = role;
 
-      document.getElementById("role").textContent =
-        roleNames[profile.role] || profile.role;
+      document.getElementById("sidebarAvatar").textContent = initial;
+      document.getElementById("topAvatar").textContent = initial;
 
-      document.getElementById("displayRole").textContent =
-        roleNames[profile.role] || profile.role;
+      document.getElementById("accountName").textContent = name;
+      document.getElementById("accountUsername").textContent = username;
+      document.getElementById("accountRole").textContent = role;
 
-      document.getElementById("passwordNotice").textContent =
-        profile.must_change_password
-          ? "Bạn cần đổi mật khẩu mặc định."
-          : "Tài khoản đã cập nhật mật khẩu.";
+      document.getElementById("settingsName").textContent = name;
+      document.getElementById("settingsUsername").textContent = username;
+      document.getElementById("settingsRole").textContent = role;
 
-      loginSection.style.display = "none";
-      dashboard.style.display = "block";
+      const notice = document.getElementById("passwordNotice");
+
+      if (profile.must_change_password) {
+        notice.style.display = "block";
+        notice.textContent =
+          "Bạn cần đổi mật khẩu mặc định. Chức năng đổi mật khẩu chưa được triển khai.";
+      } else {
+        notice.style.display = "none";
+      }
+
+      showApp();
+      switchPage("overview");
     }
 
+    // LOGIN
     document.getElementById("loginForm")
       .addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -238,7 +1113,6 @@
         showMessage("");
 
         try {
-          // Map username to the internal Auth email.
           const email = `${username}@lop92.example.com`;
 
           const { data, error } = await db.auth.signInWithPassword({
@@ -259,6 +1133,58 @@
         }
       });
 
+
+    // NAVIGATION
+    function switchPage(pageName) {
+      if (!pageTitles[pageName]) return;
+
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+      });
+
+      document.querySelectorAll(".nav-item").forEach(button => {
+        button.classList.toggle(
+          "active",
+          button.dataset.page === pageName
+        );
+      });
+
+      document.getElementById(`page-${pageName}`)
+        .classList.add("active");
+
+      document.getElementById("topbarTitle").textContent =
+        pageTitles[pageName];
+
+      closeSidebar();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll(".nav-item").forEach(button => {
+      button.addEventListener("click", () => {
+        switchPage(button.dataset.page);
+      });
+    });
+
+
+    // MOBILE SIDEBAR
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("mobileOverlay");
+
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+    }
+
+    document.getElementById("menuToggle")
+      .addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("show");
+      });
+
+    overlay.addEventListener("click", closeSidebar);
+
+
+    // LOGOUT
     document.getElementById("logoutButton")
       .addEventListener("click", async () => {
         const { error } = await db.auth.signOut();
@@ -269,25 +1195,31 @@
         }
 
         document.getElementById("password").value = "";
+        closeSidebar();
         showLogin();
       });
 
-    // Restore an existing login session.
-    async function initialize() {
-      const { data: { session } } = await db.auth.getSession();
 
-      if (session) {
-        try {
+    // RESTORE SESSION
+    async function initialize() {
+      try {
+        const { data: { session }, error } = await db.auth.getSession();
+
+        if (error) throw error;
+
+        if (session) {
           await showDashboard(session.user);
-        } catch (error) {
-          await db.auth.signOut();
-          showMessage(error.message);
         }
+      } catch (error) {
+        await db.auth.signOut();
+        showLogin();
+        showMessage(error.message || "Không thể tải phiên đăng nhập.");
       }
     }
 
     initialize();
   </script>
+
 </body>
 </html>
-
+```
