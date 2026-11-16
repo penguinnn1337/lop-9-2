@@ -1,1 +1,296 @@
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lớp 9/2 | Class Hub</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f3f5fa;
+      color: #20283a;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 8px 35px #17255412;
+    }
+
+    .logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: #243b70;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    h1 { font-size: 25px; margin: 0 0 8px; }
+    .subtitle { color: #788196; margin-bottom: 28px; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin: 17px 0 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #dce1eb;
+      border-radius: 9px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus { border-color: #3456a0; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 9px;
+      background: #243b70;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 22px;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: .6; cursor: wait; }
+
+    .message {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #b42318;
+      line-height: 1.5;
+    }
+
+    .dashboard { display: none; }
+    .role {
+      display: inline-block;
+      background: #edf2ff;
+      color: #29477e;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin: 12px 0;
+    }
+
+    .info {
+      background: #f6f7fb;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 18px;
+      line-height: 1.8;
+    }
+
+    .logout { background: #596579; }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <section id="loginSection">
+      <div class="logo">9/2</div>
+      <h1>Class Hub</h1>
+      <p class="subtitle">Cổng thông tin lớp 9/2</p>
+
+      <form id="loginForm">
+        <label for="username">Tên đăng nhập</label>
+        <input id="username" placeholder="Ví dụ: 9201"
+          autocomplete="username" required>
+
+        <label for="password">Mật khẩu</label>
+        <input id="password" type="password"
+          placeholder="Nhập mật khẩu"
+          autocomplete="current-password" required>
+
+        <button id="loginButton" type="submit">Đăng nhập</button>
+      </form>
+
+      <div id="message" class="message" role="alert"></div>
+    </section>
+
+    <section id="dashboard" class="dashboard">
+      <div class="logo">9/2</div>
+      <h1>Xin chào!</h1>
+      <p id="fullName"></p>
+      <span id="role" class="role"></span>
+
+      <div class="info">
+        <div><b>Username:</b> <span id="displayUsername"></span></div>
+        <div><b>Vai trò:</b> <span id="displayRole"></span></div>
+        <p id="passwordNotice"></p>
+      </div>
+
+      <button class="logout" id="logoutButton">Đăng xuất</button>
+    </section>
+
+  </main>
+
+  <script>
+    // SUPABASE CONFIGURATION
+    const SUPABASE_URL =
+      "https://bvoponruhjawmczrypco.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_FmPhxJD9bd8bjvVZLya04g_De41IGYc
+";
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    const loginSection = document.getElementById("loginSection");
+    const dashboard = document.getElementById("dashboard");
+    const message = document.getElementById("message");
+    const loginButton = document.getElementById("loginButton");
+
+    const roleNames = {
+      student: "Học sinh",
+      teacher: "Giáo viên chủ nhiệm",
+      class_president: "Lớp trưởng",
+      academic_monitor: "Lớp phó học tập",
+      labor_monitor: "Lớp phó lao động",
+      group_leader: "Tổ trưởng"
+    };
+
+    function showMessage(text) {
+      message.textContent = text;
+    }
+
+    function showLogin() {
+      loginSection.style.display = "block";
+      dashboard.style.display = "none";
+    }
+
+    async function showDashboard(user) {
+      const { data: profile, error } = await db
+        .from("profiles")
+        .select("username, full_name, role, must_change_password")
+        .eq("id", user.id)
+        .single();
+
+      if (error || !profile) {
+        throw new Error(
+          "Không tìm thấy hồ sơ tài khoản. Hãy liên hệ quản trị viên."
+        );
+      }
+
+      document.getElementById("fullName").textContent =
+        profile.full_name;
+
+      document.getElementById("displayUsername").textContent =
+        profile.username;
+
+      document.getElementById("role").textContent =
+        roleNames[profile.role] || profile.role;
+
+      document.getElementById("displayRole").textContent =
+        roleNames[profile.role] || profile.role;
+
+      document.getElementById("passwordNotice").textContent =
+        profile.must_change_password
+          ? "Bạn cần đổi mật khẩu mặc định."
+          : "Tài khoản đã cập nhật mật khẩu.";
+
+      loginSection.style.display = "none";
+      dashboard.style.display = "block";
+    }
+
+    document.getElementById("loginForm")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const username = document.getElementById("username")
+          .value.trim();
+
+        const password = document.getElementById("password").value;
+
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+          showMessage("Tên đăng nhập không hợp lệ.");
+          return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.textContent = "Đang đăng nhập...";
+        showMessage("");
+
+        try {
+          // Map username to the internal Auth email.
+          const email = `${username}@lop92.example.com`;
+
+          const { data, error } = await db.auth.signInWithPassword({
+            email,
+            password
+          });
+
+          if (error) throw error;
+
+          await showDashboard(data.user);
+
+        } catch (error) {
+          await db.auth.signOut();
+          showMessage(error.message || "Đăng nhập thất bại.");
+        } finally {
+          loginButton.disabled = false;
+          loginButton.textContent = "Đăng nhập";
+        }
+      });
+
+    document.getElementById("logoutButton")
+      .addEventListener("click", async () => {
+        const { error } = await db.auth.signOut();
+
+        if (error) {
+          alert("Không thể đăng xuất: " + error.message);
+          return;
+        }
+
+        document.getElementById("password").value = "";
+        showLogin();
+      });
+
+    // Restore an existing login session.
+    async function initialize() {
+      const { data: { session } } = await db.auth.getSession();
+
+      if (session) {
+        try {
+          await showDashboard(session.user);
+        } catch (error) {
+          await db.auth.signOut();
+          showMessage(error.message);
+        }
+      }
+    }
+
+    initialize();
+  </script>
+</body>
+</html>
+
